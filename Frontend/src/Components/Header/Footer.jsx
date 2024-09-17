@@ -1,4 +1,5 @@
 import React from 'react'
+import SimpleMap from '../Client/Map'
 
 const Footer = () => {
     return (
@@ -26,7 +27,7 @@ const Footer = () => {
                         <div className="row">
                             <h4>कार्यालय स्थान</h4>
                             <div className="col">
-                                Map Here
+                                <SimpleMap></SimpleMap>
                             </div>
                         </div>
                         <div className="row">
