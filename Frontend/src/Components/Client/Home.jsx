@@ -73,7 +73,7 @@ const Home = () => {
                     <div className="row b">
                         <div className="col mb-1 mt-0 p-2 bg-danger text-white">
                             <marquee behavior="" direction=""scrollamount="1" >
-                                सुचना
+                                सुचना-2
                             </marquee>
                         </div>
                         <div className="col-12">
