@@ -18,6 +18,7 @@
     "bootstrap-icons": "^1.11.3",
     "date-fns": "^3.6.0",
     "dotenv": "^16.4.5",
+    "google-map-react": "^2.2.1",
     "nepali-date-converter": "^3.3.2",
     "nepali-datepicker-reactjs": "^1.1.7",
     "nepali-datetime": "^1.2.1",
