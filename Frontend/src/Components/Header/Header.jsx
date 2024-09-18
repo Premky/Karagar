@@ -39,20 +39,20 @@ const Header = () => {
 
   return (
     <div className='row container-fluid p-3'>
-      <div className='col-1'>
+      <div className='col-lg-1 col-md-6 col-sm-12'>
         <img src={np_govt_logo} alt="Logo" height={100} />
       </div>
-      <div className="col-8 m-0 p-0 text-center text-danger">
+      <div className="col-lg-7 col-md-6 col-sm-12 m-0 p-0 text-center text-danger">
         <h5 className='m-0 p-0'>नेपाल सरकार</h5>
         <h5 className='m-0 p-0'>गृह मन्त्रालय</h5>
         <h5 className='m-0 p-0'>कालिकास्थान, काठमाडौं</h5>
         <h4 className='m-0 p-0'>कारागार व्यवस्थापन विभाग</h4>
         <h2 className=''><strong>कारागार कार्यालय सङ्‍खुवासभा</strong></h2>
       </div>
-      <div className="col-1">
+      <div className="col-lg-1 col-md-6 col-sm-12">
         <img src={np_flag} alt="Logo" height={100} />
       </div>
-      <div className="col-2 h5 text-info-emphasis">
+      <div className="col-lg-2 col-md-6 col-sm-12 h5 text-info-emphasis">
       {formattedDateNp}, {dayName} <br /> 
       {nepaliTime} &nbsp;
       </div>
