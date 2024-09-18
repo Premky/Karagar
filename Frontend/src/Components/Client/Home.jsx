@@ -69,7 +69,7 @@ const Home = () => {
         <div className='container-fluid'>
             <div className="row">
                 {/* Main Page */}
-                <div className="col-9">
+                <div className="col-md-9 col-sm-12">
                     <div className="row b">
                         <div className="col mb-1 mt-0 p-2 bg-danger text-white">
                             <marquee behavior="" direction=""scrollamount="1" >
@@ -103,7 +103,7 @@ const Home = () => {
                 </div>
 
                 {/* Side Bar */}
-                <div className="col-2">
+                <div className="col-md-2 col-sm-12">
                     {
                         fetchEmp.map((n, index) => (
                             <>
@@ -131,7 +131,7 @@ const Home = () => {
                     </div>
                     <br />
                     <div className="row">
-                        <div className="col-3">
+                        <div className="col-12">
                             <div className="card" style={{ width: "18rem" }}>
                                 <div className="card-body bg-primary text-white">
                                     <h2 className='text-center'>M</h2>
