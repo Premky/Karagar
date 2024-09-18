@@ -10,6 +10,9 @@ import Feedback from './Components/Client/Feedback'
 import Mediacenter from './Components/Client/Mediacenter'
 import Notice_Bolpatra from './Components/Client/Notice_Bolpatra'
 import Navbar from './Components/Header/Navbar'
+import AdminNavbar from './Components/Admin/AdminNavbar'
+import Employee from './Components/Admin/Employee'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
 // import './App.css'
 
 function App() {
@@ -17,16 +20,22 @@ function App() {
 
   return (
     <>
-      <Header/>
-      
-        {/* <Home/> */}
-        {/* <NoticeBoard/> */}
-        {/* <Contact/> */}
-        {/* <Feedback/> */}
-        {/* <Mediacenter/> */}
-        
+      <Header />
+      <BrowserRouter>
+        <Routes>
+        <Route path="/" element={<Navbar/>}/>
+          <Route path="/admin/" element={<AdminNavbar/>}/>
+        </Routes>
+      </BrowserRouter>
+      {/* <Home/> */}
+      {/* <NoticeBoard/> */}
+      {/* <Contact/> */}
+      {/* <Feedback/> */}
+      {/* <Mediacenter/> */}
 
-      <Footer/>
+      
+
+      <Footer />
     </>
   )
 }

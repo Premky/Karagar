@@ -5,6 +5,8 @@ import NepaliDate from 'nepali-datetime'
 import np_govt_logo from '../../assets/logo-small.png';
 import np_flag from '../../assets/nepal_flag.gif';
 import Navbar from './Navbar';
+import './header_footer.css';
+
 
 const Header = () => {
     const [nepaliTime, setNepaliTime] = useState();
@@ -39,24 +41,24 @@ const Header = () => {
 
   return (
     <div className='row container-fluid p-3'>
-      <div className='col-lg-1 col-md-6 col-sm-12'>
+      <div className='col-md-2 col-sm-2 col-xs-12 text-center'>
         <img src={np_govt_logo} alt="Logo" height={100} />
       </div>
-      <div className="col-lg-7 col-md-6 col-sm-12 m-0 p-0 text-center text-danger">
-        <h5 className='m-0 p-0'>नेपाल सरकार</h5>
-        <h5 className='m-0 p-0'>गृह मन्त्रालय</h5>
-        <h5 className='m-0 p-0'>कालिकास्थान, काठमाडौं</h5>
+      <div className="col-md-5 col-sm-8 col-xs-12 text-center text-danger headoffice">
+        <h4 className='m-0 p-0'>नेपाल सरकार</h4>
+        <h4 className='m-0 p-0'>गृह मन्त्रालय</h4>
+        <h4 className='m-0 p-0'>कालिकास्थान, काठमाडौं</h4>
         <h4 className='m-0 p-0'>कारागार व्यवस्थापन विभाग</h4>
-        <h2 className=''><strong>कारागार कार्यालय सङ्‍खुवासभा</strong></h2>
+        <h2 className='office_name'><strong>कारागार कार्यालय सङ्‍खुवासभा</strong></h2>
       </div>
-      <div className="col-lg-1 col-md-6 col-sm-12">
+      <div className="col-md-1 col-sm-2 d-none d-sm-block">
         <img src={np_flag} alt="Logo" height={100} />
       </div>
-      <div className="col-lg-2 col-md-6 col-sm-12 h5 text-info-emphasis">
+      <div className="d-none d-md-block col-md-4 col-sm-12 h5 text-info-emphasis">
       {formattedDateNp}, {dayName} <br /> 
       {nepaliTime} &nbsp;
       </div>
-      <Navbar/>
+      
     </div>
   );
 };
