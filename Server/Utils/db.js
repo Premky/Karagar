@@ -16,6 +16,7 @@ import mysql from 'mysql2';
 //     database:'karagar'
 // })
 
+
 //This uses mysql2
 const con = mysql.createConnection({
     host:'prem-prem.d.aivencloud.com',
@@ -24,8 +25,6 @@ const con = mysql.createConnection({
     user:'karagar_sankhuwasabha',    
     password:'AVNS_enpVvs-a73u5I3Trd4M',
     // extension:'mysqli',
-    database:'Karagar'
-})
 
 con.connect(function(err){
     if(err){
