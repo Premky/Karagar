@@ -1,5 +1,6 @@
 import React from 'react'
 import SimpleMap from '../Client/Map'
+import {Link} from 'react-router-dom'
 
 const Footer = () => {
     return (
@@ -31,7 +32,8 @@ const Footer = () => {
                             </div>
                         </div>
                         <div className="row">
-                            .
+                            
+                            <Link to ='/admin/'>.</Link>       
                         </div>
                     </div>
                 </div>
