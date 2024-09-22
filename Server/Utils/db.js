@@ -1,6 +1,9 @@
 // import mysql from 'mysql'
 
 import mysql from 'mysql2';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 // const con = mysql.createConnection({
 //     host:'localhost',
@@ -17,14 +20,16 @@ import mysql from 'mysql2';
 // })
 
 //This uses mysql2
+
 const con = mysql.createConnection({
-    host:'prem-prem.d.aivencloud.com',
-    port:'22706',
-    // auth_type:'config',
-    user:'karagar_sankhuwasabha',    
-    password:'AVNS_enpVvs-a73u5I3Trd4M',
-    // extension:'mysqli',
-    database:'Karagar'
+    host:process.env.DB_HOST,
+    port:process.env.DB_PORT,    
+    user:process.env.DB_USER,    
+    password:process.env.DB_PASSWORD,
+    database:process.env.DB_NAME,
+    ssl:{
+        rejectUnauthorized:false,
+    }
 })
 
 con.connect(function(err){
