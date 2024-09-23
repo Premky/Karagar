@@ -1,5 +1,5 @@
 import express from 'express'
-import con from '../utils/db.js'
+import con from '../Utils/db.js'
 // import mysql from 'mysql2/promise';
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcrypt' //Toencrypt the password
