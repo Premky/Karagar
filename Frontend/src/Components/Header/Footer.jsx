@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -29,6 +30,13 @@ const Footer = () => {
                             Map here
                             {/* Uncomment when ready */}
                             {/* <SimpleMap /> */}
+
+                           </div>
+                        </div>
+                        <div className="row">
+                            
+                            <Link to ='/admin/'>.</Link>       
+
                         </div>
                     </div>
                     <div className="row mt-2">
