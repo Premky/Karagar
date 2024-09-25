@@ -18,9 +18,17 @@ const __dirname = path.dirname(__filename);
 
 
 app.use(cors({
-    // origin: "http://192.168.162.15:8211", // Allow your frontend's origin
-    // origin: "http://192.168.1.35:5173", // Allow your frontend's origin
-    origin: "http://localhost:5173", // Allow your frontend's origin
+    origin: function (origin, callback) {
+        const allowedOrigins = [
+            'http://localhost:5173',
+            'https://karagar.onrender.com/'
+        ];
+        if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true // Allow credentials such as cookies
 }));

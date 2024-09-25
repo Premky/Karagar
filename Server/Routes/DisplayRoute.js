@@ -20,7 +20,7 @@ const router = express.Router()
 const fy = new NepaliDate().format('YYYY'); //Support for filter
 const fy_date = fy + '-4-1'
 
-import {promisify} from 'util';
+import { promisify } from 'util';
 const query = promisify(con.query).bind(con);
 
 router.post('/login', (req, res) => {
@@ -33,7 +33,7 @@ router.get('/employee', async (req, res) => {
                 LEFT JOIN ranks r ON r.id = e.rank ORDER BY merit_no`;
     try {
         const result = await query(sql);
-        console.log(result);
+        // console.log(result);
         return res.json({ Status: true, Result: result });
     } catch (err) {
         console.error('Database query error:', err);
@@ -50,8 +50,16 @@ router.get('/office', (req, res) => {
     })
 })
 
-router.get('/ranks', (req, res) => {
-    const sql = "SELECT * FROM ranks"
-})
+router.get('/ranks', async(req, res) => {
+    const sql = "SELECT * FROM ranks";
+    try {
+        const result = await query(sql);
+        // console.log(result);
+        return res.json({ Status: true, Result: result });
+    } catch (err) {
+        console.error('Database query error:', err);
+        return res.status(500).json({ Status: false, Error: 'Internal Server Error' });
+    }
+});
 
 export { router as displayRouter }
