@@ -31,20 +31,20 @@ const Footer = () => {
                             {/* Uncomment when ready */}
                             {/* <SimpleMap /> */}
 
-                           </div>
                         </div>
-                        <div className="row">
-                            
-                            <Link to ='/admin/'>.</Link>       
+                    </div>
+                    <div className="row">
 
-                        </div>
+                        <Link to='/admin/'>.</Link>
+
                     </div>
-                    <div className="row mt-2">
-                        <Link to="/admin/" className="text-white">Go to Admin</Link>
-                    </div>
+                </div>
+                <div className="row mt-2">
+                    <Link to="/admin/" className="text-white">Go to Admin</Link>
                 </div>
             </div>
         </div>
+        
     );
 };
 
