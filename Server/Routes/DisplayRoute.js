@@ -45,4 +45,12 @@ router.get('/employee1', (req, res) => {
     })
 })
 
+router.get('/office', (req, res)=>{
+    const sql = "SELECT * FROM office WHERE display=1";
+    con.query(sql, (err, result) => {
+        if (err) return res.json({ Status: false, Error: "Query Error" })
+        return res.json({ Status: true, Result: result })
+    })
+})
+
 export { router as displayRouter }
