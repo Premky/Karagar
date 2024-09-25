@@ -15,42 +15,43 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const router = express.Router()
+// const { promisify } = require('util');
+
 const fy = new NepaliDate().format('YYYY'); //Support for filter
 const fy_date = fy + '-4-1'
+
+import {promisify} from 'util';
+const query = promisify(con.query).bind(con);
 
 router.post('/login', (req, res) => {
 
 })
 
 router.get('/employee', async (req, res) => {
-    const sql = 'SELECT * FROM employe';
-    con.query(sql, (err, result) => {
-        if (err) {
-            console.error('Database query error:', err);
-            return res.status(500).json({ Status: false, Error: 'Internal Server Error' });
-        }
+    const sql = `SELECT e.*, r.rank_en_name, r.rank_np_name 
+                FROM employe e
+                LEFT JOIN ranks r ON r.id = e.rank`;
+    try {
+        const result = await query(sql);
         // console.log(result);
         return res.json({ Status: true, Result: result });
-    });
+    } catch (err) {
+        console.error('Database query error:', err);
+        return res.status(500).json({ Status: false, Error: 'Internal Server Error' });
+    }
 });
 
 
-router.get('/employee1', (req, res) => {
-
-    // console.log(officeid, );
-    const sql = "SELECT * FROM employe";
+router.get('/office', (req, res) => {
+    const sql = "SELECT * FROM office WHERE display=1";
     con.query(sql, (err, result) => {
         if (err) return res.json({ Status: false, Error: "Query Error" })
         return res.json({ Status: true, Result: result })
     })
 })
 
-router.get('/office', (req, res)=>{
-    const sql = "SELECT * FROM office WHERE display=1";
-    con.query(sql, (err, result) => {
-        if (err) return res.json({ Status: false, Error: "Query Error" })
-        return res.json({ Status: true, Result: result })
-    })
+router.get('/ranks', (req, res) => {
+    const sql = "SELECT * FROM ranks"
 })
 
 export { router as displayRouter }
