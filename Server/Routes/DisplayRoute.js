@@ -29,11 +29,11 @@ router.post('/login', (req, res) => {
 
 router.get('/employee', async (req, res) => {
     const sql = `SELECT e.*, r.rank_en_name, r.rank_np_name 
-                FROM employe e
-                LEFT JOIN ranks r ON r.id = e.rank`;
+                FROM employe e 
+                LEFT JOIN ranks r ON r.id = e.rank ORDER BY merit_no`;
     try {
         const result = await query(sql);
-        // console.log(result);
+        console.log(result);
         return res.json({ Status: true, Result: result });
     } catch (err) {
         console.error('Database query error:', err);

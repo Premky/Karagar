@@ -83,7 +83,7 @@ const Home = () => {
                                     </div>
                                     <div className="col-sm-6 col-xl-7 p-1">
                                         <div className="card-body">
-                                            <h5 className="card-title">{n.rank}</h5>
+                                            <h5 className="card-title">{n.rank_np_name}</h5>
                                             <p className='card-text p-0 m-1'>{n.name_np}</p>
                                             <p className='card-text p-0 m-1'>{n.contact}</p>
                                             <p className='card-text p-0 m-1'>{n.email}</p>

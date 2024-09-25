@@ -12,7 +12,9 @@ const Employee = () => {
     const fetchRank=async()=>{
         try{
             const result =await axios.get(`${BASE_URL}/display/ranks`)
-            
+            if(result.data.Status){
+                
+            }
         } catch(err){
             console.log(err);
         }
