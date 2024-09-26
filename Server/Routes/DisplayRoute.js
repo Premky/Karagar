@@ -30,7 +30,7 @@ router.post('/login', (req, res) => {
 router.get('/employee', async (req, res) => {
     const sql = `SELECT e.*, r.rank_en_name, r.rank_np_name 
                 FROM employe e 
-                LEFT JOIN ranks r ON r.id = e.rank ORDER BY merit_no`;
+                LEFT JOIN ranks r ON r.id = e.rank_id ORDER BY merit_no, is_active`;
     try {
         const result = await query(sql);
         // console.log(result);
