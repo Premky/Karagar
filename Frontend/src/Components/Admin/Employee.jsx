@@ -38,11 +38,12 @@ const Employee = () => {
     const BASE_URL = import.meta.env.VITE_API_BASE_URL
     const npToday = new NepaliDate();
     const formattedDateNp = npToday.format('YYYY-MM-DD');
-    const { register, handleSubmit, reset, formState: { errors } } = useForm();
+    const { register, handleSubmit, reset, setValue, formState: { errors } } = useForm();
     const [loading, setLoading] = useState(false); //For displaying loading state
     const [editing, setEditing] = useState(false);
     const [ranks, setRanks] = useState([]);
     const [imagePreview, setImagePreview] = useState(null);
+    const [currentEmp, setCurrentEmp] = useState(null);
     const [fetchEmp, setFetchEmp] = useState([])
 
     //Open For Modal
@@ -99,37 +100,51 @@ const Employee = () => {
         }
     }
 
-
+    const handleEdit = (emp) => {
+        setCurrentEmp(emp);
+        setEditing(true);
+        setValue("emp_id", emp.emp_id);
+        setValue("name_np", emp.name_np);
+        setValue("name", emp.name);
+        setValue("gender", emp.gender);
+        setValue("rank_id", emp.rank_id);
+        setValue("merit_no", emp.merit_no);
+        setValue("contact", emp.contact);
+        setValue("email", emp.email);
+        setValue("remarks", emp.remarks);
+        setValue("is_active", emp.is_active);
+        setImagePreview(emp.photo);
+    }
 
     const onFormSubmit = async (data) => {
         setLoading(true); // Start loading
         try {
             const formData = new FormData();
-            for (const key in data) {
-                formData.append(key, data[key]);
-            }
-
-            // Log each entry in the FormData
-            // for (let [key, value] of formData.entries()) {
-            //     console.log(key, value); // Check individual form data
-            //      console.log(formData);// We cannot console like this 
-            // }
-
-            const result = await axios.post(`${BASE_URL}/auth/add_employee`, formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
+            Object.keys(data).forEach(key => formData.append(key, data[key]));
+            
+            const url = editing ? `${BASE_URL}/auth/update_employee/${currentEmp.id}` : `${BASE_URL}/auth/add_employee`;
+            const method = editing ? 'PUT' : 'POST';
+            const result = await axios({
+                method,
+                url,
+                data: formData,
+                headers: { 'Content-Type': 'multipart/form-data' },
             });
 
             if (result.data.Status) {
-                alert('Employee added successfully!');
+                alert(`Employee ${editing ? 'updated' : 'added'} successfully!`);
                 reset();
+                setEditing(false);
+                setCurrentEmp(null);
+                setImagePreview(null);
+                fetchEmployees();
             } else {
                 alert(result.data.Error);
             }
         } catch (err) {
             console.error('Submission error:', err);
-            alert('An error occurred. Please try again.');
+            alert('An error occurred. Please try again.',);
+            // alert(err)
         } finally {
             setLoading(false); // End loading
         }
@@ -141,6 +156,10 @@ const Employee = () => {
             setLoading(false);
         } else {
             reset();
+            setEditing(false);
+            setCurrentEmp(null);
+            setImagePreview(null);
+            fetchEmployees();
         }
     };
 
@@ -306,11 +325,14 @@ const Employee = () => {
                             <div className="row">
                                 <div className="col-xl-3 col-md-6 col-sm-12 pt-2">
                                     <button className='btn btn-primary' disabled={loading}>
-                                        {loading ? 'Saving...' : 'Save'}
+                                        {editing ? (loading ? 'Updating' : 'Update') :
+                                            (loading ? 'Saving...' : 'Save')}
                                     </button>
                                 </div>
                                 <div className="col-xl-3 col-md-6 col-sm-12 pt-2">
-                                    <button type='button' onClick={handleClear} className='btn btn-warning'>Clear</button>
+                                    <button type='button' onClick={handleClear} className='btn btn-warning'>
+                                        {loading ? 'Stop' : 'Clear'}
+                                    </button>
                                 </div>
                             </div>
                         </form>
@@ -344,7 +366,9 @@ const Employee = () => {
                                         <td>{fe.photo}</td>
                                         <td>{fe.remarks}</td>
                                         <td>
-                                            <button name='edit' className='btn btn-sm bg-primary' id={fe.id}>
+                                            <button name='edit' className='btn btn-sm bg-primary'
+                                                id={fe.id}
+                                                onClick={() => handleEdit(fe)}>
                                                 <Icon iconName="Pencil"
                                                     style={{ color: 'white', fontSize: '1em' }}
                                                 />
