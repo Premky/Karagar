@@ -38,12 +38,11 @@ const Employee = () => {
     const BASE_URL = import.meta.env.VITE_API_BASE_URL
     const npToday = new NepaliDate();
     const formattedDateNp = npToday.format('YYYY-MM-DD');
-    const { register, handleSubmit, reset, setValue, formState: { errors } } = useForm();
+    const { register, handleSubmit, reset, formState: { errors } } = useForm();
     const [loading, setLoading] = useState(false); //For displaying loading state
     const [editing, setEditing] = useState(false);
     const [ranks, setRanks] = useState([]);
     const [imagePreview, setImagePreview] = useState(null);
-    const [currentEmp, setCurrentEmp] = useState(null);
     const [fetchEmp, setFetchEmp] = useState([])
 
     //Open For Modal
@@ -100,51 +99,37 @@ const Employee = () => {
         }
     }
 
-    const handleEdit = (emp) => {
-        setCurrentEmp(emp);
-        setEditing(true);
-        setValue("emp_id", emp.emp_id);
-        setValue("name_np", emp.name_np);
-        setValue("name", emp.name);
-        setValue("gender", emp.gender);
-        setValue("rank_id", emp.rank_id);
-        setValue("merit_no", emp.merit_no);
-        setValue("contact", emp.contact);
-        setValue("email", emp.email);
-        setValue("remarks", emp.remarks);
-        setValue("is_active", emp.is_active);
-        setImagePreview(emp.photo);
-    }
+
 
     const onFormSubmit = async (data) => {
         setLoading(true); // Start loading
         try {
             const formData = new FormData();
-            Object.keys(data).forEach(key => formData.append(key, data[key]));
-            
-            const url = editing ? `${BASE_URL}/auth/update_employee/${currentEmp.id}` : `${BASE_URL}/auth/add_employee`;
-            const method = editing ? 'PUT' : 'POST';
-            const result = await axios({
-                method,
-                url,
-                data: formData,
-                headers: { 'Content-Type': 'multipart/form-data' },
+            for (const key in data) {
+                formData.append(key, data[key]);
+            }
+
+            // Log each entry in the FormData
+            // for (let [key, value] of formData.entries()) {
+            //     console.log(key, value); // Check individual form data
+            //      console.log(formData);// We cannot console like this 
+            // }
+
+            const result = await axios.post(`${BASE_URL}/auth/add_employee`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
             });
 
             if (result.data.Status) {
-                alert(`Employee ${editing ? 'updated' : 'added'} successfully!`);
+                alert('Employee added successfully!');
                 reset();
-                setEditing(false);
-                setCurrentEmp(null);
-                setImagePreview(null);
-                fetchEmployees();
             } else {
                 alert(result.data.Error);
             }
         } catch (err) {
             console.error('Submission error:', err);
-            alert('An error occurred. Please try again.',);
-            // alert(err)
+            alert('An error occurred. Please try again.');
         } finally {
             setLoading(false); // End loading
         }
@@ -156,10 +141,6 @@ const Employee = () => {
             setLoading(false);
         } else {
             reset();
-            setEditing(false);
-            setCurrentEmp(null);
-            setImagePreview(null);
-            fetchEmployees();
         }
     };
 
@@ -325,14 +306,11 @@ const Employee = () => {
                             <div className="row">
                                 <div className="col-xl-3 col-md-6 col-sm-12 pt-2">
                                     <button className='btn btn-primary' disabled={loading}>
-                                        {editing ? (loading ? 'Updating' : 'Update') :
-                                            (loading ? 'Saving...' : 'Save')}
+                                        {loading ? 'Saving...' : 'Save'}
                                     </button>
                                 </div>
                                 <div className="col-xl-3 col-md-6 col-sm-12 pt-2">
-                                    <button type='button' onClick={handleClear} className='btn btn-warning'>
-                                        {loading ? 'Stop' : 'Clear'}
-                                    </button>
+                                    <button type='button' onClick={handleClear} className='btn btn-warning'>Clear</button>
                                 </div>
                             </div>
                         </form>
@@ -366,13 +344,172 @@ const Employee = () => {
                                         <td>{fe.photo}</td>
                                         <td>{fe.remarks}</td>
                                         <td>
-                                            <button name='edit' className='btn btn-sm bg-primary'
-                                                id={fe.id}
-                                                onClick={() => handleEdit(fe)}>
+                                            <button className='btn btn-sm bg-primary' variant="outlined" onClick={handleClickOpen}>
                                                 <Icon iconName="Pencil"
                                                     style={{ color: 'white', fontSize: '1em' }}
                                                 />
                                             </button>
+                                            <Dialog
+                                                open={open}
+                                                onClose={handleClose}
+                                                PaperComponent={PaperComponent}
+                                                aria-labelledby="draggable-dialog-title"
+                                            >
+                                                <DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
+                                                    कर्मचारीको विवरण
+                                                </DialogTitle>
+                                                <DialogContent>
+                                                    <DialogContentText>
+                                                        <form className="row g-10 m-2" onSubmit={handleSubmit(onFormSubmit)}>
+                                                            <div className="row">
+                                                                <div className="col-xl-3 col-md-6 col-sm-12 pt-2">
+                                                                    <label htmlFor="emp_id">कर्मचारी संकेत नं. <span>*</span></label>
+                                                                    <input
+                                                                        type="text"
+                                                                        {...register("emp_id", { required: "This field is required" })} //Use this instead of name='emp_id'
+                                                                        placeholder="कर्मचारी संकेत नं."
+                                                                        className="form-control rounded-0"
+                                                                    // value=''
+                                                                    />
+                                                                    {errors.emp_id && <span className="text-danger">{errors.emp_id.message}</span>}
+                                                                </div>
+
+                                                                <div className="col-xl-3 col-md-6 col-sm-12 pt-2">
+                                                                    <label htmlFor="name_np">नामथर (नेपालीमा)</label>
+                                                                    <input
+                                                                        type="text"
+                                                                        {...register("name_np", { required: "This field is required" })} //Use this instead of name=
+                                                                        placeholder="नाम नेपालीमा"
+                                                                        className="form-control rounded-0"
+                                                                    // value=''
+                                                                    />
+                                                                    {errors.name_np && <span className="text-danger">{errors.name_np.message}</span>}
+                                                                </div>
+
+                                                                <div className="col-xl-3 col-md-6 col-sm-12 pt-2">
+                                                                    <label htmlFor="name">नामथर (अंग्रेजी)</label>
+                                                                    <input
+                                                                        type="text"
+                                                                        {...register("name", { required: "This field is required" })} //Use this instead of name=
+                                                                        placeholder="Name (In English)"
+                                                                        className="form-control rounded-0"
+                                                                    // value=''
+                                                                    />
+                                                                    {errors.name && <span className="text-danger">{errors.name.message}</span>}
+                                                                </div>
+
+                                                                <div className="col-xl-3 col-md-6 col-sm-12 pt-2">
+                                                                    <label htmlFor="gender">लिङ्ग</label>
+                                                                    <select
+                                                                        {...register("gender", { required: "This field is required" })} //Use this instead of name=
+                                                                        className='form-control rounded-0'
+                                                                        defaultValue=''
+                                                                    >
+                                                                        <option value="" disabled>लिङ्ग</option>
+                                                                        <option value="M">पुरुष</option>
+                                                                        <option value="F">महिला</option>
+                                                                        <option value="O">अन्य</option>
+                                                                    </select>
+                                                                    {errors.gender && <span className="text-danger">{errors.gender.message}</span>}
+                                                                </div>
+
+                                                                <div className="col-xl-3 col-md-6 col-sm-12 pt-2">
+                                                                    <label htmlFor="rank">पद</label>
+                                                                    <select
+                                                                        {...register("rank_id", { required: "This field is required" })} //Use this instead of name=
+                                                                        className='form-control rounded-0'
+                                                                        defaultValue=''                                        >
+                                                                        <option value='' disabled>पद</option>
+                                                                        {
+                                                                            ranks.map((n, index) => (
+                                                                                <option value={n.id} key={index}>{n.rank_np_name}</option>
+                                                                            ))
+                                                                        }
+                                                                    </select>
+                                                                    {errors.rank && <span className="text-danger">{errors.rank.message}</span>}
+                                                                </div>
+
+                                                                <div className="col-xl-3 col-md-6 col-sm-12 pt-2">
+                                                                    <label htmlFor="merit_no">वरीयता</label>
+                                                                    <input
+                                                                        type="number"
+                                                                        {...register("merit_no", { required: "This field is required" })} //Use this instead of name=
+                                                                        placeholder="वरीयता"
+                                                                        className="form-control rounded-0"
+                                                                    // value=''
+                                                                    />
+                                                                    {errors.merit_no && <span className="text-danger">{errors.merit_no.message}</span>}
+                                                                </div>
+
+                                                                <div className="col-xl-3 col-md-6 col-sm-12 pt-2">
+                                                                    <label htmlFor="contact">सम्पर्क</label>
+                                                                    <input
+                                                                        type="text"
+                                                                        {...register("contact", { required: "This field is required" })} //Use this instead of name=
+                                                                        placeholder="सम्पर्क नं."
+                                                                        className="form-control rounded-0"
+                                                                    // value=''
+                                                                    />
+                                                                    {errors.contact && <span className="text-danger">{errors.contact.message}</span>}
+                                                                </div>
+
+                                                                <div className="col-xl-3 col-md-6 col-sm-12 pt-2">
+                                                                    <label htmlFor="email">इमेल</label>
+                                                                    <input
+                                                                        type="text"
+                                                                        {...register("email", { required: "This field is required" })} //Use this instead of name=
+                                                                        placeholder="Email"
+                                                                        className="form-control rounded-0"
+                                                                    // value=''
+                                                                    />
+                                                                    {errors.email && <span className="text-danger">{errors.email.message}</span>}
+                                                                </div>                                                                
+
+                                                                <div className="col-xl-3 col-md-6 col-sm-12 pt-2">
+                                                                    <label htmlFor="remarks">कैफियत</label>
+                                                                    <input
+                                                                        type="text"
+                                                                        {...register("remarks")} //Use this instead of name=
+                                                                        placeholder="Remarks"
+                                                                        className="form-control rounded-0"
+                                                                    // value=''
+                                                                    />
+                                                                </div>
+
+                                                                <div className="col-xl-3 col-md-6 col-sm-12 pt-2">
+                                                                    <label htmlFor="is_active">अवस्था</label>
+                                                                    <select
+                                                                        {...register("is_active", { required: "This field is required" })} //Use this instead of name=
+                                                                        className='form-control rounded-0'
+                                                                        defaultValue=''
+                                                                    >
+                                                                        <option value='' disabled>अवस्था</option>
+                                                                        <option value='1'>सक्रिय</option>
+                                                                        <option value='0'>निस्कृिय</option>
+                                                                    </select>
+                                                                    {errors.is_active && <p className="text-danger">{errors.is_active.message}</p>} {/* Display error message */}
+                                                                </div>
+                                                            </div>
+                                                            <div className="row">
+                                                                <div className="col-xl-3 col-md-6 col-sm-12 pt-2">
+                                                                    <button className='btn btn-primary' disabled={loading}>
+                                                                        {loading ? 'Updating...' : 'Update'}
+                                                                    </button>
+                                                                </div>
+                                                                <div className="col-xl-3 col-md-6 col-sm-12 pt-2">
+                                                                    <button type='button' onClick={handleClear} className='btn btn-warning'>Clear</button>
+                                                                </div>
+                                                            </div>
+                                                        </form>
+                                                    </DialogContentText>
+                                                </DialogContent>
+                                                <DialogActions>
+                                                    <Button autoFocus onClick={handleClose}>
+                                                        Cancel
+                                                    </Button>
+                                                    <Button onClick={handleClose}>Subscribe</Button>
+                                                </DialogActions>
+                                            </Dialog>
                                         </td>
                                     </tr>
                                 ))}

@@ -21,7 +21,8 @@ app.use(cors({
     origin: function (origin, callback) {
         const allowedOrigins = [
             'http://localhost:5173',
-            'https://karagar.onrender.com'
+            'https://karagar.onrender.com',
+            'http://192.168.1.24:5173'
         ];
         if (!origin || allowedOrigins.indexOf(origin) !== -1) {
             callback(null, true);
