@@ -62,4 +62,15 @@ router.get('/ranks', async(req, res) => {
     }
 });
 
+router.get('/notices', async(req,res)=>{
+    const sql = "SELECT * FROM notices";
+    try{
+        const result = await query(sql);
+        return res.json({Status:true, Result: result});
+    }catch(err){
+        console.error('Database query error:', err);
+        return res.status(500).json({ Status: false, Error: 'Internal Server Error' });
+    }
+})
+
 export { router as displayRouter }

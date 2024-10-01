@@ -6,6 +6,7 @@ import Contact from './Components/Client/Contact';
 import Feedback from './Components/Client/Feedback';
 import Mediacenter from './Components/Client/Mediacenter';
 import Notice_Bolpatra from './Components/Client/Notice_Bolpatra';
+import Navbar from './Components/Header/Navbar';
 import AdminNavbar from './Components/Admin/AdminNavbar';
 import Employee from './Components/Admin/Employee';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
@@ -17,7 +18,7 @@ function App() {
     <BrowserRouter>
       <Header />
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<Navbar/>} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/feedback" element={<Feedback />} />
         <Route path="/mediacenter" element={<Mediacenter />} />

@@ -60,7 +60,8 @@ const Employee = () => {
 
     const fetchEmployees = async () => {
         try {
-            const result = await axios.get(`${BASE_URL}/display/employee`);
+            const result = await axios.get(
+                `${BASE_URL}/display/employee`);
             if (result.data.Status) {
                 setFetchEmp(result.data.Result);
             } else {
