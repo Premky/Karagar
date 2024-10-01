@@ -8,6 +8,7 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 
 import Employee from './Employee';
+import NoticeForm from './NoticeForm';
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -63,7 +64,7 @@ const FullWidthTabs = () => {
                             variant="fullWidth"
                             aria-label="full width tabs example"
                         >
-                            <Tab label="हाम्रो बारेमा" {...a11yProps(0)} />
+                            <Tab label="कर्मचारी" {...a11yProps(0)} />
                             <Tab label="सूचना पाटी" {...a11yProps(1)} />
                             <Tab label="प्रकाशनहरु" {...a11yProps(2)} />
                             <Tab label="मिडिया सेन्टर" {...a11yProps(3)} />
@@ -77,7 +78,7 @@ const FullWidthTabs = () => {
                         <Employee/>
                     </TabPanel>
                     <TabPanel value={value} index={1} dir={theme.direction}>
-                        <Employee/>
+                        <NoticeForm/>
                     </TabPanel>
                     <TabPanel value={value} index={2} dir={theme.direction}>
                         

@@ -75,7 +75,7 @@ const Home = () => {
                     ) : error ? (
                         <p>{error}</p>
                     ) : (
-                        fetchEmp.map((n, index) => (
+                        fetchEmp.slice(0,3).map((n, index) => (
                             <div className="card mb-3" key={index}>
                                 <div className="row g-0">
                                     <div className="col-sm-6 col-xl-4 p-1">
@@ -116,11 +116,13 @@ const Home = () => {
                                 <h2 className='text-center'>सूचनाको हक</h2>
                             </div>
                         </div>
-                        <div className="card" style={{ width: "18rem" }}>
+
+                        {/* <div className="card" style={{ width: "18rem" }}>
                             <div className="card-body bg-primary text-white">
                                 <h2 className='text-center'>उजुरी/गुनासो</h2>
                             </div>
-                        </div>
+                        </div> */}
+
                     </div>
                 </div>
                 <div className="row">
