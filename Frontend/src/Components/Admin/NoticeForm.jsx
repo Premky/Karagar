@@ -89,7 +89,7 @@ const NoticeForm = () => {
         }
     };
 
-    const handleEdit=(notice)=>{
+    const handleEdit = (notice) => {
         setCurrentNotice(notice);
         setEditing(true);
         setValue("date", notice.date);
@@ -99,8 +99,24 @@ const NoticeForm = () => {
         setValue("is_active", notice.is_active);
         setValue("file", notice.file);
         setValue("remarks", notice.remarks);
-        setFilePreview(notice.file);
+        // Set file preview URL if file exists
+        if (notice.file) {
+            const fileUrl = `${BASE_URL}/${notice.file}`;
+            setFilePreview(fileUrl);  // Use file URL for the preview
+        } else {
+            setFilePreview(null);  // Reset preview if no file is available
+        }
     }
+
+    const [message, setMessage] = React.useState('');
+
+    const handleOnClick = async (data) => {
+        if (await confirm({ confirmation: 'Are your sure?' })) {
+            setMessage('yes');
+        } else {
+            setMessage('no');
+        }
+    };
 
     useEffect(() => {
         fetchNotices();
@@ -196,6 +212,7 @@ const NoticeForm = () => {
                                     {filePreview && (
                                         <div className="col-xl-3 col-md-6 col-sm-12 pt-2">
                                             <img src={filePreview} alt='Preview' style={{ width: '100px', height: 'auto' }} />
+                                            {filePreview}
                                         </div>
                                     )}
 
@@ -257,6 +274,13 @@ const NoticeForm = () => {
                                                         style={{ color: 'white', fontSize: '1em' }}
                                                     />
                                                 </button>
+                                                <button name='delete' className='btn btn-sm bg-danger'
+                                                    id={notice.id}>
+                                                    <Icon iconName="Trash"
+                                                        style={{ color: 'white', fontSize: '1em' }}
+                                                    />
+                                                </button>
+
                                             </td>
                                         </tr>
                                     ))}

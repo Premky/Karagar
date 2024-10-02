@@ -161,7 +161,7 @@ router.post('/add_notice', upload.single('file'), async(req, res) => {
     const { date, end_date, title_np, is_popup, is_active, remarks } = req.body;
     const updated_by = 1;
     const created_by = 1;
-    const filePath = req.file ? req.file.path : null; // Handle file upload path
+    const filePath = req.file ? path.posix.join('Uploads', req.file.filename) : null; // Handle file upload path
 
     const sql = `INSERT INTO notices (date, end_date, subject, is_popup, is_active, file, remarks, updated_by, created_by)
         VALUES (?)`;
@@ -183,7 +183,7 @@ router.put('/update_notice/:id', upload.single('file'), async (req, res) => {
     const { id } = req.params;
     const { date, end_date, title_np, is_popup, is_active, remarks } = req.body;
     const updated_by = 1; // You can dynamically assign the user ID here
-    let newFilePath = req.file ? req.file.path : null;
+    let newFilePath = req.file ? path.posix.join( 'Uploads', req.file.filename) : null;
   
     try {
       // Fetch the current notice to check if a new file was uploaded or to keep the old file
@@ -195,7 +195,7 @@ router.put('/update_notice/:id', upload.single('file'), async (req, res) => {
       }
   
       let oldFilePath = existingNotice[0].file; // Store the old file path
-  
+      
       if (!newFilePath) {
         newFilePath = oldFilePath; // Keep the existing file if no new file is uploaded
       }
