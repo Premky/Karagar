@@ -157,11 +157,11 @@ router.put('/update_employee/:id', upload.single('photo'), async (req, res) => {
     }
 });
 
-router.post('/add_notice', upload.single('file'), async(req, res) => {
+router.post('/add_notice', upload.single('file'), async (req, res) => {
     const { date, end_date, title_np, is_popup, is_active, remarks } = req.body;
     const updated_by = 1;
     const created_by = 1;
-    const filePath = req.file ? req.file.path : null; // Handle file upload path
+    const filePath = req.file ? path.posix.join('Uploads', req.file.filename) : null; // Handle file upload path
 
     const sql = `INSERT INTO notices (date, end_date, subject, is_popup, is_active, file, remarks, updated_by, created_by)
         VALUES (?)`;
@@ -183,50 +183,86 @@ router.put('/update_notice/:id', upload.single('file'), async (req, res) => {
     const { id } = req.params;
     const { date, end_date, title_np, is_popup, is_active, remarks } = req.body;
     const updated_by = 1; // You can dynamically assign the user ID here
-    let newFilePath = req.file ? req.file.path : null;
-  
+    let newFilePath = req.file ? path.posix.join('Uploads', req.file.filename) : null;
+
     try {
-      // Fetch the current notice to check if a new file was uploaded or to keep the old file
-      const checkNoticeSQL = 'SELECT file FROM notices WHERE id = ?';
-      const existingNotice = await query(checkNoticeSQL, [id]);
-  
-      if (!existingNotice || existingNotice.length === 0) {
-        return res.status(404).json({ Status: false, Result: 'Notice not found' });
-      }
-  
-      let oldFilePath = existingNotice[0].file; // Store the old file path
-  
-      if (!newFilePath) {
-        newFilePath = oldFilePath; // Keep the existing file if no new file is uploaded
-      }
-  
-      // SQL for updating the notice
-      const updateSQL = `
+        // Fetch the current notice to check if a new file was uploaded or to keep the old file
+        const checkNoticeSQL = 'SELECT file FROM notices WHERE id = ?';
+        const existingNotice = await query(checkNoticeSQL, [id]);
+
+        if (!existingNotice || existingNotice.length === 0) {
+            return res.status(404).json({ Status: false, Result: 'Notice not found' });
+        }
+
+        let oldFilePath = existingNotice[0].file; // Store the old file path
+        let old = 'Public/'.concat(oldFilePath)
+        console.log(old)
+        oldFilePath = old;
+        if (!newFilePath) {
+            newFilePath = oldFilePath; // Keep the existing file if no new file is uploaded
+        }
+
+        // SQL for updating the notice
+        const updateSQL = `
         UPDATE notices 
         SET date = ?, end_date = ?, subject = ?, is_popup = ?, is_active = ?, file = ?, remarks = ?, updated_by = ?
         WHERE id = ?
       `;
-      const values = [date, end_date, title_np, is_popup, is_active, newFilePath, remarks, updated_by, id];
-  
-      const result = await query(updateSQL, values);
-  
-      if (result.affectedRows === 1) {
-        // If a new file is uploaded and the old file exists, delete the old file
-        if (req.file && oldFilePath && fs.existsSync(oldFilePath)) {
-          fs.unlinkSync(oldFilePath); // Delete the old file
+        const values = [date, end_date, title_np, is_popup, is_active, newFilePath, remarks, updated_by, id];
+
+        const result = await query(updateSQL, values);
+
+        if (result.affectedRows === 1) {
+            // If a new file is uploaded and the old file exists, delete the old file
+            if (req.file && oldFilePath && fs.existsSync(oldFilePath)) {
+                fs.unlinkSync(oldFilePath); // Delete the old file
+            }
+            return res.json({ Status: true, Result: 'Notice updated successfully and old file deleted!' });
+        } else {
+            return res.status(500).json({ Status: false, Result: 'Failed to update notice' });
         }
-        return res.json({ Status: true, Result: 'Notice updated successfully and old file deleted!' });
-      } else {
-        return res.status(500).json({ Status: false, Result: 'Failed to update notice' });
-      }
-  
+
     } catch (err) {
-      console.error('Error updating notice:', err);
-      return res.status(500).json({ Status: false, Error: 'Internal Server Error' });
+        console.error('Error updating notice:', err);
+        return res.status(500).json({ Status: false, Error: 'Internal Server Error' });
     }
-  });
-  
-  
+});
+
+router.delete('/delete_notice/:id', async (req, res) => {
+    const { id } = req.params;
+    let filePath = null; // Declare filePath at the beginning
+
+    try {
+        // Fetch the record to get the file name
+        const findRecordsql = `SELECT file FROM notices WHERE id = ?`;
+        const foundRecord = await query(findRecordsql, id);
+
+        // Check if a record was found
+        if (foundRecord.length > 0) {
+            filePath = `Public/${foundRecord[0].file}`; // Use backticks for template literals
+        }
+
+        // Proceed with deleting the notice
+        const sql = `DELETE FROM notices WHERE id = ?`;
+        const result = await query(sql, id);
+
+        if (result.affectedRows === 1) {
+            // If the old file exists, delete it
+            if (filePath && fs.existsSync(filePath)) {
+                fs.unlinkSync(filePath); // Delete the old file
+            }
+            return res.json({ Status: true, Result: 'Notice Deleted Successfully!' });
+        } else {
+            return res.status(500).json({ Status: false, Result: 'Failed to Delete notice' });
+        }
+
+    } catch (err) {
+        console.error('Error Deleting notice:', err);
+        return res.status(500).json({ Status: false, Error: 'Internal Server Error' });
+    }
+});
+
+
 
 
 

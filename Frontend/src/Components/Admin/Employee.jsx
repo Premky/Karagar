@@ -101,7 +101,7 @@ const Employee = () => {
         }
     }
 
-    const handleEdit = (emp) => {
+    const handleEdit = (emcdp) => {
         setCurrentEmp(emp);
         setEditing(true);
         setValue("emp_id", emp.emp_id);

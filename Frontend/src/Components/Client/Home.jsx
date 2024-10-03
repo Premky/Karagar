@@ -16,6 +16,7 @@ const Home = () => {
     const [office, setOffice] = useState([]);
     const [loading, setLoading] = useState(true); // Added loading state
     const [error, setError] = useState(null); // Added error state
+    const [fetchNotice, setFetchNotice]=useState([]);
 
     const fetchEmployees = async () => {
         try {
@@ -48,10 +49,26 @@ const Home = () => {
         }
     };
 
+    const fetchNotices = async () => {
+        try {
+            const result = await axios.get(`${BASE_URL}/display/notices`);
+            if (result.data.Status) {
+                setFetchNotice(result.data.Result);
+            } else {
+                alert(result.data.Result);
+                console.error(result.data.Result);
+            }
+        } catch (err) {
+            console.log(err);
+            alert('Failed to fetch notices. Please try again later.');
+        }
+    };
+
     useEffect(() => {
         fetchEmployees();
         fetchOfficeInfo();
-    }, []);
+        fetchNotices();
+    }, [BASE_URL]);
 
     return (
         <div className='container-fluid'>
@@ -127,6 +144,8 @@ const Home = () => {
                 </div>
                 <div className="row">
                     <Notice_Bolpatra />
+
+                    
                 </div>
             </div>
         </div>
