@@ -9,7 +9,7 @@ const style = {
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    width: 550,
+    width: 800,
     bgcolor: 'background.paper',
     border: '2px solid #000',
     boxShadow: 24,
@@ -46,9 +46,12 @@ const CustomModal = ({ buttonText, title, children, fileType }) => {
                             />
                         ) : (
                             <>
-                                <img src={children} alt={`Preview of ${title}`} height='700px' width='100%' />
+                                <img src={children} alt={`Preview of ${title}`} height='600px' width='100%' />
                             </>
                         )}
+                        <div className='text-center' style={{ marginTop: '20px' }}>                            
+                            <Button onClick={handleClose} style={{ marginLeft: '10px' }} className='bg-danger text-white'>Close</Button>
+                        </div>
                     </Box>
                 </Box>
             </Modal>
